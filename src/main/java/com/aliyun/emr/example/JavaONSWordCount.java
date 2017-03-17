@@ -34,6 +34,7 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import scala.Tuple2;
 
 import java.util.regex.Pattern;
+import java.util.Iterator;
 
 public class JavaONSWordCount {
     private static final Pattern SPACE = Pattern.compile(" ");
@@ -71,8 +72,8 @@ public class JavaONSWordCount {
             }
         }).flatMap(new FlatMapFunction<String, String>() {
             @Override
-            public Iterable<String> call(String x) {
-                return Lists.newArrayList(SPACE.split(x));
+            public Iterator<String> call(String x) {
+                return Lists.newArrayList(SPACE.split(x)).iterator();
             }
         });
         JavaPairDStream<String, Integer> wordCounts = words.mapToPair(
@@ -90,6 +91,10 @@ public class JavaONSWordCount {
 
         wordCounts.print();
         jssc.start();
-        jssc.awaitTermination();
+        try {
+          jssc.awaitTermination();
+        }catch (InterruptedException e)
+        {
+        }
     }
 }

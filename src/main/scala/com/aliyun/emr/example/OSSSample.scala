@@ -35,9 +35,14 @@ object OSSSample extends RunLocally {
 
     val inputPath = args(0)
     val numPartitions = args(1).toInt
+    val inputData = sc.textFile(inputPath)
+    val cnt = inputData.count
+    println(s"count: $cnt")
+    /*
     val ossData = sc.textFile(inputPath, numPartitions)
     println("The top 10 lines are:")
     ossData.top(10).foreach(println)
+    */
   }
 
   override def getAppName: String = "OSS Sample"
